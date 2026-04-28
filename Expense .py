@@ -1,33 +1,34 @@
 import streamlit as st
-# Expense Tracker
 
-expenses=[]
+st.title("Expense Tracker 💰")
 
+# Session State لتخزين البيانات
+if "expenses" not in st.session_state:
+    st.session_state.expenses = []
 
-while True:
+# إدخال البيانات
+name = st.text_input("اسم المصروف")
+value = st.number_input("قيمة المصروف", min_value=0.0, step=1.0)
+category = st.selectbox("نوع المصروف", ["Food", "Transport", "Shopping", "Other"])
 
-  user_name = input(" أسم المصروف")
-  user_value = float(input("قيمة المصروف"))
+# زر الإضافة
+if st.button("Add Expense"):
+    expense = {
+        "name": name,
+        "value": value,
+        "category": category
+    }
+    st.session_state.expenses.append(expense)
+    st.success("تم إضافة المصروف ✅")
 
-  expense = {
-      
-    "name":user_name,
-    "value":user_value
-   }
+# عرض المصاريف
+st.subheader("المصاريف")
 
-  expenses.append(expense)
+total = 0
 
-  again = input(" محتاج تضيف مصاريف تانيه ولا لا ؟ لو محتاج تضيف اختا yes or no").lower()
+for item in st.session_state.expenses:
+    st.write(f"Name: {item['name']} | Value: {item['value']} | Category: {item['category']}")
+    total += item["value"]
 
-  if again != "yes":
-    break
-
-
-total = 0 
-
-for item in expenses :
-  print("Name: " , item["name"])
-  print("Value: " , item["value"])
-  total += item["value"]
-
-print("Total = " , total)
+st.write("---")
+st.write(f"### Total = {total}")
